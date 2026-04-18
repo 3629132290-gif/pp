@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>兽兽专属注册</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 背景星光效果 */
+        body::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+                radial-gradient(2px 2px at 60px 70px, #fff, transparent),
+                radial-gradient(1px 1px at 50px 50px, #fff, transparent),
+                radial-gradient(1px 1px at 130px 80px, #fff, transparent),
+                radial-gradient(2px 2px at 90px 10px, #fff, transparent);
+            background-size: 200px 200px;
+            opacity: 0.3;
+            animation: twinkle 5s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        .register-card {
+            background: rgba(25, 25, 45, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 0 30px rgba(100, 200, 255, 0.3),
+                        inset 0 0 20px rgba(100, 200, 255, 0.1);
+            border: 1px solid rgba(100, 200, 255, 0.3);
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s ease;
+        }
+
+        .register-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 40px rgba(100, 200, 255, 0.5),
+                        inset 0 0 20px rgba(100, 200, 255, 0.1);
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .card-header h1 {
+            color: #64c8ff;
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(100, 200, 255, 0.5);
+        }
+
+        .card-header p {
+            color: #a0b8d0;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #64c8ff;
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(30, 40, 60, 0.8);
+            border: 2px solid rgba(100, 200, 255, 0.3);
+            border-radius: 10px;
+            font-size: 15px;
+            color: #fff;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #64c8ff;
+            box-shadow: 0 0 10px rgba(100, 200, 255, 0.4);
+            background: rgba(40, 50, 70, 0.8);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper button {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #64c8ff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #64c8ff 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .register-btn:hover {
+            background: linear-gradient(135deg, #50a8e0 0%, #6a4190 100%);
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(100, 200, 255, 0.4);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 25px 0;
+            color: #64c8ff;
+            font-size: 14px;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #a0b8d0;
+        }
+
+        .login-link a {
+            color: #64c8ff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-card">
+        <div class="card-header">
+            <h1>兽兽专属注册</h1>
+            <p>加入我们的小窝，开启毛茸茸的旅程~</p>
+        </div>
+        <form>
+            <div class="form-group">
+                <label for="username">兽设ID/昵称</label>
+                <input type="text" id="username" placeholder="请输入你的兽设名">
+            </div>
+            <div class="form-group">
+                <label for="email">邮箱（可选）</label>
+                <input type="email" id="email" placeholder="方便找回密码">
+            </div>
+            <div class="form-group">
+                <label for="password">密码</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" placeholder="设置你的专属密码">
+                    <button type="button" onclick="togglePassword('password')">显示</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="confirm-password">确认密码</label>
+                <div class="password-wrapper">
+                    <input type="password" id="confirm-password" placeholder="再次输入密码">
+                    <button type="button" onclick="togglePassword('confirm-password')">显示</button>
+                </div>
+            </div>
+            <button type="submit" class="register-btn">提交注册</button>
+        </form>
+        <div class="divider">—— 已加入小窝？——</div>
+        <div class="login-link">
+            已有账号？<a href="#">点击登录</a>
+        </div>
+    </div>
+
+    <script>
+        // 切换密码显示/隐藏
+        function togglePassword(id) {
+            const input = document.getElementById(id);
+            const button = input.nextElementSibling;
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.textContent = '隐藏';
+            } else {
+                input.type = 'password';
+                button.textContent = '显示';
+            }
+        }
+
+        // 简单的表单提交反馈
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            if (username.trim() === '') {
+                alert('请输入你的兽设ID/昵称~');
+                return;
+            }
+            alert(`欢迎你，${username}！注册成功啦~`);
+        });
+    </script>
+</body>
+</html>
