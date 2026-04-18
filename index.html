@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>兽兽论坛</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei",sans-serif}
+body{background:#f5f5f5}
+
+/* 注册框 */
+.register-box{
+  max-width:400px;margin:80px auto;padding:30px;background:#fff;border-radius:10px;box-shadow:0 3px 15px rgba(0,0,0,0.1)
+}
+.register-box h2{
+  text-align:center;margin-bottom:25px;color:#4e73df
+}
+.form-item{
+  margin-bottom:18px
+}
+.form-item label{
+  display:block;margin-bottom:6px;font-size:14px;color:#333
+}
+.form-item input{
+  width:100%;height:42px;padding:0 12px;border:1px solid #ddd;border-radius:6px;font-size:15px
+}
+.btn-register{
+  width:100%;height:44px;background:#4e73df;color:#fff;border:none;border-radius:6px;font-size:16px;cursor:pointer;margin-top:10px
+}
+.btn-register:hover{background:#3b5bbf}
+
+/* 注册成功 */
+.success-page{
+  text-align:center;margin-top:80px;display:none
+}
+.success-page h2{
+  color:#28a745;margin-bottom:20px
+}
+.success-page .btn-go{
+  padding:10px 25px;background:#4e73df;color:#fff;border:none;border-radius:6px;cursor:pointer
+}
+
+/* 论坛头部 */
+.header{
+  background:#4e73df;color:#fff;padding:15px 30px;display:flex;justify-content:space-between;align-items:center;display:none
+}
+.logo{font-size:22px;font-weight:bold}
+.user{font-size:16px}
+
+/* 论坛内容 */
+.container{
+  max-width:1000px;margin:30px auto;padding:0 20px;display:none
+}
+.post-box{
+  background:#fff;padding:20px;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.1);margin-bottom:30px
+}
+.post-box h3{margin-bottom:15px;color:#333}
+textarea{
+  width:100%;height:100px;padding:10px;border:1px solid #ddd;border-radius:6px;resize:none;margin-bottom:10px;font-size:14px
+}
+.upload-row{
+  display:flex;gap:10px;margin-bottom:10px;align-items:center
+}
+button{
+  background:#4e73df;color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer
+}
+button:hover{background:#3b5bbf}
+.list-box{
+  background:#fff;padding:20px;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.1)
+}
+.list-box h3{margin-bottom:15px;color:#333}
+.item{
+  padding:12px 0;border-bottom:1px solid #eee
+}
+.item:last-child{border-bottom:none}
+.item .name{
+  font-weight:bold;color:#4e73df;margin-bottom:5px
+}
+.item .content{
+  color:#555;margin-bottom:5px
+}
+.item img{
+  max-width:200px;border-radius:6px;margin-top:5px
+}
+</style>
+</head>
+
+<body>
+
+<!-- 注册界面 -->
+<div class="register-box" id="registerBox">
+  <h2>兽兽论坛 - 注册</h2>
+  <div class="form-item">
+    <label>用户名</label>
+    <input type="text" id="username" placeholder="请输入用户名">
+  </div>
+  <div class="form-item">
+    <label>密码</label>
+    <input type="password" id="pwd" placeholder="请输入密码">
+  </div>
+  <div class="form-item">
+    <label>确认密码</label>
+    <input type="password" id="repwd" placeholder="请再次输入密码">
+  </div>
+  <button class="btn-register" onclick="doRegister()">立即注册</button>
+</div>
+
+<!-- 注册成功 -->
+<div class="success-page" id="successPage">
+  <h2>注册成功！</h2>
+  <p>欢迎加入兽兽论坛</p>
+  <br>
+  <button class="btn-go" onclick="goForum()">进入论坛</button>
+</div>
+
+<!-- 论坛头部 -->
+<div class="header" id="header">
+  <div class="logo">兽兽论坛</div>
+  <div class="user" id="showName"></div>
+</div>
+
+<!-- 论坛主体 -->
+<div class="container" id="container">
+  <div class="post-box">
+    <h3>发布新帖子</h3>
+    <textarea id="content" placeholder="分享你想说的话..."></textarea>
+    <div class="upload-row">
+      <input type="file" id="imgFile" accept="image/*">
+      <button onclick="previewImg()">预览图片</button>
+    </div>
+    <img id="preview" style="display:none;max-width:200px;margin:10px 0">
+    <button onclick="sendPost()">发布</button>
+  </div>
+
+  <div class="list-box">
+    <h3>最新发布</h3>
+    <div id="postList"></div>
+  </div>
+</div>
+
+<script>
+let currentUser = ""
+let previewUrl = ""
+
+// 注册
+function doRegister(){
+  let user = document.getElementById("username").value.trim()
+  let pwd = document.getElementById("pwd").value
+  let rpwd = document.getElementById("repwd").value
+
+  if(!user){return alert("请输入用户名")}
+  if(!pwd || !rpwd){return alert("请输入密码")}
+  if(pwd !== rpwd){return alert("两次密码不一致")}
+
+  currentUser = user
+  document.getElementById("registerBox").style.display = "none"
+  document.getElementById("successPage").style.display = "block"
+}
+
+// 去论坛
+function goForum(){
+  document.getElementById("successPage").style.display = "none"
+  document.getElementById("header").style.display = "flex"
+  document.getElementById("container").style.display = "block"
+  document.getElementById("showName").innerText = "用户：" + currentUser
+}
+
+// 图片预览
+function previewImg(){
+  let file = document.getElementById("imgFile").files[0]
+  if(!file)return
+  previewUrl = URL.createObjectURL(file)
+  let img = document.getElementById("preview")
+  img.src = previewUrl
+  img.style.display = "block"
+}
+
+// 发布帖子
+function sendPost(){
+  let content = document.getElementById("content").value.trim()
+  if(!content && !previewUrl){
+    return alert("请输入内容或选择图片")
+  }
+
+  let list = document.getElementById("postList")
+  let div = document.createElement("div")
+  div.className = "item"
+
+  let html = `<div class="name">${currentUser}</div>`
+  if(content) html += `<div class="content">${content}</div>`
+  if(previewUrl) html += `<img src="${previewUrl}">`
+
+  div.innerHTML = html
+  list.prepend(div)
+
+  //清空
+  document.getElementById("content").value = ""
+  document.getElementById("imgFile").value = ""
+  document.getElementById("preview").style.display = "none"
+  previewUrl = ""
+}
+</script>
+</body>
+</html>
