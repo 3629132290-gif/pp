@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>兽兽论坛</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,sans-serif}
+body{background:#1a1a1a;color:#e0e0e0;padding:20px;max-width:800px;margin:0 auto}
+.box{background:#222;border-radius:10px;padding:20px;margin-bottom:20px}
+h1,h2{color:#ffccee;margin-bottom:15px}
+input,button{width:100%;padding:12px;border-radius:6px;border:none;margin:8px 0;font-size:16px}
+input{background:#333;color:#fff}
+button{background:#d46eff;color:#fff;font-weight:bold;cursor:pointer}
+button:hover{background:#bf55ee}
+.hidden{display:none}
+.post{background:#2a2a2a;padding:15px;border-radius:8px;margin:10px 0}
+.post .user{color:#aaddff;font-weight:bold}
+.post .content{margin-top:5px}
+.post .time{font-size:12px;color:#999;margin-top:5px}
+#userInfo{margin-bottom:15px;color:#ffddff}
+</style>
+</head>
+
+<body>
+<h1>🐾 兽兽论坛</h1>
+
+<!-- 当前登录信息 -->
+<div id="userInfo" class="hidden"></div>
+
+<!-- 注册框 -->
+<div id="registerBox" class="box">
+  <h2>注册</h2>
+  <input type="text" id="regUser" placeholder="用户名">
+  <input type="password" id="regPwd" placeholder="密码">
+  <input type="password" id="regPwd2" placeholder="确认密码">
+  <button onclick="register()">注册并自动登录</button>
+  <p>已有账号？<span style="color:#aaddff;cursor:pointer" onclick="showLogin()">去登录</span></p>
+</div>
+
+<!-- 登录框 -->
+<div id="loginBox" class="box hidden">
+  <h2>登录</h2>
+  <input type="text" id="loginUser" placeholder="用户名">
+  <input type="password" id="loginPwd" placeholder="密码">
+  <button onclick="login()">登录</button>
+  <p>没有账号？<span style="color:#aaddff;cursor:pointer" onclick="showRegister()">去注册</span></p>
+</div>
+
+<!-- 发帖框 -->
+<div id="postBox" class="box hidden">
+  <h2>发布帖子</h2>
+  <input type="text" id="postContent" placeholder="说点什么...">
+  <button onclick="addPost()">发布（所有人可见）</button>
+</div>
+
+<!-- 帖子列表 -->
+<div class="box">
+  <h2>最新帖子</h2>
+  <div id="postList"></div>
+</div>
+
+<script>
+// ====================== 工具 ======================
+function $(id){return document.getElementById(id)}
+function save(key,data){localStorage.setItem(key,JSON.stringify(data))}
+function load(key){try{return JSON.parse(localStorage.getItem(key))||[]}catch(e){return[]}}
+function time(){const d=new Date();return d.toLocaleString()}
+
+// ====================== 切换界面 ======================
+function showLogin(){
+  $('registerBox').classList.add('hidden')
+  $('loginBox').classList.remove('hidden')
+}
+function showRegister(){
+  $('loginBox').classList.add('hidden')
+  $('registerBox').classList.remove('hidden')
+}
+function showMain(user){
+  $('userInfo').innerText=`当前登录：${user}`
+  $('userInfo').classList.remove('hidden')
+  $('registerBox').classList.add('hidden')
+  $('loginBox').classList.add('hidden')
+  $('postBox').classList.remove('hidden')
+  renderPosts()
+}
+
+// ====================== 注册 ======================
+function register(){
+  const user=$('regUser').value.trim()
+  const pwd=$('regPwd').value
+  const pwd2=$('regPwd2').value
+  if(!user||!pwd||pwd!==pwd2)return alert('请填写正确信息')
+  
+  let users=load('users')
+  if(users.find(u=>u.user===user))return alert('用户名已存在')
+  
+  users.push({user,pwd})
+  save('users',users)
+  save('loginUser',user) // 注册后自动登录
+  showMain(user)
+}
+
+// ====================== 登录 ======================
+function login(){
+  const user=$('loginUser').value.trim()
+  const pwd=$('loginPwd').value
+  if(!user||!pwd)return alert('请输入账号密码')
+  
+  const users=load('users')
+  const ok=users.find(u=>u.user===user&&u.pwd===pwd)
+  if(!ok)return alert('账号或密码错误')
+  
+  save('loginUser',user)
+  showMain(user)
+}
+
+// ====================== 发帖 ======================
+function addPost(){
+  const content=$('postContent').value.trim()
+  if(!content)return alert('请输入内容')
+  const user=localStorage.getItem('loginUser')
+  if(!user)return alert('请先登录')
+  
+  let posts=load('posts')
+  posts.unshift({user,content,time:time()})
+  save('posts',posts)
+  $('postContent').value=''
+  renderPosts()
+}
+
+// ====================== 渲染帖子 ======================
+function renderPosts(){
+  const list=$('postList')
+  const posts=load('posts')
+  list.innerHTML=posts.map(p=>`
+    <div class="post">
+      <div class="user">${p.user}</div>
+      <div class="content">${p.content}</div>
+      <div class="time">${p.time}</div>
+    </div>
+  `).join('')
+}
+
+window.onload=function(){
+  const user=localStorage.getItem('loginUser')
+  if(user){
+    showMain(user)
+  }else{
+    $('registerBox').classList.remove('hidden')
+  }
+  renderPosts()
+}
+</script>
+</body>
+</html>
+
